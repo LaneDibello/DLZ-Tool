@@ -19,6 +19,9 @@
 #define OFFSET_CSWSDOOR_LINKED_TO_MODULE 0x390
 #define OFFSET_CEXOSTRING_LENGTH 0x4
 #define OFFSET_CSWSOBJECT_X_POS 0x90
+#define OFFSET_CSWSOBJECT_TAG 0x18
+#define OFFSET_CSWSTRIGGER_GEOMETRY_COUNT 0x284
+#define OFFSET_CSWSTRIGGER_GEOMETRY 0x288
 
 uint getGOAIndexFromServerID(uint id) {
     return uint(((int)id >> 0x1f) * -0x1000 + (id & 0xfff));

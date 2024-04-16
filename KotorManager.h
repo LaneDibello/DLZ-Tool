@@ -104,7 +104,7 @@ public:
         GAME_OBJECT_TYPES area_go_type;
         pr->readByte((area_game_obj_ptr + OFFSET_GAME_OBJECT_TYPE), (byte *)&area_go_type);
         if (area_go_type != AREA){
-            printf("Got Bad Area Game Object!");
+            printf("Not In Module...\n");
             pr->setFailed();
             return 0x0;
         }
@@ -118,6 +118,8 @@ public:
         }
 
         ADDR area_game_obj_ptr = getAreaGameObject();
+        if (!area_game_obj_ptr)
+            return;
         
         ADDR area_obj_array_ptr;
         uint area_obj_array_length;
@@ -136,7 +138,7 @@ public:
         }
 
         uint * area_objects = nullptr;
-        uint area_objects_length; 
+        uint area_objects_length = 0; 
         getAllObjectsInArea(area_objects, area_objects_length);
         for (size_t i = 0; i < area_objects_length; ++i)
         {
@@ -148,6 +150,26 @@ public:
                 pr->readByte((game_object + OFFSET_CSWSDOOR_LINKED_TO_FLAGS), &linked_to_flags);
                 if (linked_to_flags)
                     doors.push_back(game_object);
+            }
+        }
+    }
+
+    void getAllTriggersInArea(std::vector<ADDR>& triggers) {
+        if (pr->isFailed()) {
+            refreshAddresses();
+            pr->clearFailed();
+        }
+
+        uint* area_objects = nullptr;
+        uint area_objects_length = 0;
+        getAllObjectsInArea(area_objects, area_objects_length);
+        for (size_t i = 0; i < area_objects_length; ++i)
+        {
+            ADDR game_object = getGameObjectByServerID(area_objects[i]);
+            GAME_OBJECT_TYPES obj_type;
+            pr->readByte((game_object + OFFSET_GAME_OBJECT_TYPE), (byte*)&obj_type);
+            if (obj_type == TRIGGER) {
+                triggers.push_back(game_object);
             }
         }
     }
@@ -169,6 +191,33 @@ public:
             pr->readVectors(doors[i] + OFFSET_CSWSDOOR_CORNERS, corners, 4);
             printf("\t%s\n", temp);
             printf("\t\t%f\t%f\t%f\t%f\n", corners[0].x, corners[1].x, corners[2].x, corners[3].x);
+        }
+    }
+
+    void outputAllTriggerBasedDLZLinesInArea() {
+        if (pr->isFailed()) {
+            refreshAddresses();
+            pr->clearFailed();
+        }
+
+        std::vector<ADDR> triggers;
+        getAllTriggersInArea(triggers);
+        printf("Found %d trigger(s)\nTheir x-coords are:\n", triggers.size());
+        for (size_t i = 0; i < triggers.size(); ++i)
+        {
+            char temp[100];
+            uint geometry_count;
+            pr->readUint(triggers[i] + OFFSET_CSWSTRIGGER_GEOMETRY_COUNT, &geometry_count);
+            GameVector * geometry = new GameVector[geometry_count];
+            ADDR geo_ptr;
+            pr->readUint(triggers[i] + OFFSET_CSWSTRIGGER_GEOMETRY, &geo_ptr);
+            pr->readVectors(geo_ptr, geometry, geometry_count);
+            readCExoString(triggers[i] + OFFSET_CSWSOBJECT_TAG, temp);
+            printf("\t%s\n\t", temp);
+            for (size_t j = 0; j < geometry_count; ++j) {
+                printf("\t%f", geometry[j].x);
+            }
+            printf("\n");
         }
     }
 };

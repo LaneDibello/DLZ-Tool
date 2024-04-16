@@ -16,14 +16,17 @@ int main(int argc, char* argv[]) {
 
     while(true) {
         km.outputAllDoorBasedDLZLinesInArea();
+        km.outputAllTriggerBasedDLZLinesInArea();
 
         float x = 0.0;
         printf("\n");
-        while(km.pr->readFloat(km.getPlayerGameObject() + OFFSET_CSWSOBJECT_X_POS, &x) && !km.pr->isFailed()){
-            printf("\r%f", x);
+        if (!km.pr->isFailed()) {
+            while (km.pr->readFloat(km.getPlayerGameObject() + OFFSET_CSWSOBJECT_X_POS, &x) && !km.pr->isFailed()) {
+                printf("\r%f", x);
+            }
         }
         printf("\rUpdating...");
-        Sleep(5000);
+        Sleep(500);
         system("cls");
     }
 
