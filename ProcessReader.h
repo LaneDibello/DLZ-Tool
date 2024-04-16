@@ -2,6 +2,7 @@
 #include "GetProcessID.h"
 #include "types.h"
 
+// Allows Access to the internal memory of `process_name`
 class ProcessReader {
     int pid;
     HANDLE h;
