@@ -1,6 +1,7 @@
 #pragma once
 #include "GetProcessID.h"
 #include "types.h"
+#include <Psapi.h>
 
 // Allows Access to the internal memory of `process_name`
 class ProcessReader {
@@ -9,6 +10,18 @@ class ProcessReader {
     bool failed = false;
     
 public:
+    uint getModuleSize() {
+        HMODULE modules[20];
+        DWORD count;
+        MODULEINFO info;
+        if (!EnumProcessModules(h, modules, 20, &count)) {
+            printf("failed to enum process modules with error: %d", GetLastError());
+        }
+        GetModuleInformation(h, modules[0], &info, sizeof(MODULEINFO));
+        
+        return info.SizeOfImage;
+    }
+    
     bool isFailed(){
         return failed;
     }
@@ -24,7 +37,7 @@ public:
     ProcessReader(const char * process_name) {
         pid = GetProcessID(process_name);
 
-        h = OpenProcess(PROCESS_VM_READ, false, pid);
+        h = OpenProcess(PROCESS_VM_READ | PROCESS_QUERY_INFORMATION, false, pid);
 
         if (h == NULL) {
             printf("ProcessReader: Failed OpenProcess with Error: %d", GetLastError());

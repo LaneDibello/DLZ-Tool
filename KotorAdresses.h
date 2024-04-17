@@ -75,6 +75,10 @@ public:
         OFFSET_CSWSOBJECT_TAG = 0x18;
     }
 
+    void swapK2SteamAddress() {
+        ADDRESS_APP_MANAGER = 0x00a1b4a4;
+    }
+
     ~KotorAddresses() {
         delete[] KOTOR_EXE;
     }

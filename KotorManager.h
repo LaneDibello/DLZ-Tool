@@ -3,6 +3,9 @@
 #include "KotorAdresses.h"
 #include <vector>
 
+#define K2_STEAM_MODULE_SIZE 7049216
+#define K2_GOD_MODULE_SIZE 7012352
+
 class KotorManager {
 public:
     ProcessReader * pr;
@@ -18,6 +21,12 @@ public:
         if (pr)
             delete pr;
         pr = new ProcessReader(ka->KOTOR_EXE);
+
+        if (version == 2) {
+            if (pr->getModuleSize() == K2_STEAM_MODULE_SIZE) {
+                ka->swapK2SteamAddress();
+            }
+        }
 
         ADDR temp;
 
