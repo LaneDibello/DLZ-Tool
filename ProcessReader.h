@@ -47,7 +47,7 @@ public:
 
     bool readUints(ADDR address, uint * out, size_t count) {
         if (!ReadProcessMemory(h, (LPVOID)address, out, sizeof(uint) * count, NULL)) {
-            // printf("Failed ReadProcessMemory with Error: %d", GetLastError());
+            //printf("Failed ReadProcessMemory with Error: %d", GetLastError());
             failed = true;
             return false;
         }
