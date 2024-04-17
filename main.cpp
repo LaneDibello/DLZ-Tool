@@ -14,6 +14,7 @@ int get_running_kotor() {
 
 int main(int argc, char* argv[]) {
     
+    printf("Waiting for kotor to be opened...\n");
     int version = 0;
     while (!version) {
         version = get_running_kotor();
