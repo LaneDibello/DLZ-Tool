@@ -4,7 +4,7 @@
 #include <vector>
 
 #define K2_STEAM_MODULE_SIZE 7049216
-#define K2_GOD_MODULE_SIZE 7012352
+#define K2_GOG_MODULE_SIZE 7012352
 
 class KotorManager {
 public:
