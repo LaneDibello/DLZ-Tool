@@ -30,6 +30,10 @@ public:
     ADDR OFFSET_CEXOSTRING_LENGTH;
     ADDR OFFSET_CSWSOBJECT_TAG;
 
+    ADDR OFFSET_LOAD_SCREEN;
+    ADDR OFFSET_LOAD_DIRECTION;
+
+
     KotorAddresses(int version = 1) {
         if (version == 1) {
             KOTOR_EXE = new char[sizeof(KOTOR_1_EXE)];
@@ -43,6 +47,7 @@ public:
             OFFSET_CSWSOBJECT_X_POS = 0x90;
             OFFSET_CSWSTRIGGER_GEOMETRY_COUNT = 0x284;
             OFFSET_CSWSTRIGGER_GEOMETRY = 0x288;
+            OFFSET_LOAD_DIRECTION = 0xc8;
         }
         else if (version == 2) {
             KOTOR_EXE = new char[sizeof(KOTOR_2_EXE)];
@@ -56,6 +61,7 @@ public:
             OFFSET_CSWSOBJECT_X_POS = 0x94;
             OFFSET_CSWSTRIGGER_GEOMETRY_COUNT = 0x2c4;
             OFFSET_CSWSTRIGGER_GEOMETRY = 0x2c8;
+            OFFSET_LOAD_DIRECTION = 0xd0;
         }
         else {
             printf("INVALID GAME VERSION %d!\n", version);
@@ -66,6 +72,7 @@ public:
         OFFSET_CLIENT = 0x4;
         OFFSET_SERVER = 0x8;
         OFFSET_INTERNAL = 0x4;
+        OFFSET_LOAD_SCREEN = 0x278;
         OFFSET_SERVER_GAME_OBJ_ARR = 0x1005c;
         OFFSET_CLIENT_PLAYER_ID = 0x20;
         OFFSET_AREA_GAME_OBJECT_ARRAY = 0x74;

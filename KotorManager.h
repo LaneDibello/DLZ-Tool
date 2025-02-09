@@ -185,6 +185,17 @@ public:
         }
     }
 
+    void setLoadFromLeft() {
+        if (pr->isFailed()) {
+            refreshAddresses();
+            pr->clearFailed();
+        }
+
+        ADDR load_screen;
+        pr->readUint((client_internal + ka->OFFSET_LOAD_SCREEN), &load_screen);
+        pr->setLSB(load_screen + ka->OFFSET_LOAD_DIRECTION);
+    }
+
     void outputAllDoorBasedDLZLinesInArea() {
         if(pr->isFailed()) {
             refreshAddresses();
