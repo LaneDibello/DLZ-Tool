@@ -37,11 +37,30 @@ public:
     ProcessReader(const char * process_name) {
         pid = GetProcessID(process_name);
 
-        h = OpenProcess(PROCESS_VM_READ | PROCESS_QUERY_INFORMATION, false, pid);
+        h = OpenProcess(PROCESS_VM_READ | PROCESS_VM_WRITE | PROCESS_QUERY_INFORMATION, false, pid);
 
         if (h == NULL) {
             printf("ProcessReader: Failed OpenProcess with Error: %d", GetLastError());
             exit(1);
+        }
+    }
+
+    void setLSB(ADDR address) {
+        int value;
+
+        // Read the current value at the address
+        if (!readInt(address, &value)) {
+            printf("Failed to read memory at address %X\n", address);
+            return;
+        }
+
+        // Set the LSB to 0
+        value &= ~1;
+
+        // Write the modified value back to memory
+        if (!WriteProcessMemory(h, (LPVOID)address, &value, sizeof(int), NULL)) {
+            printf("Failed WriteProcessMemory with Error: %d\n", GetLastError());
+            failed = true;
         }
     }
 

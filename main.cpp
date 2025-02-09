@@ -38,6 +38,7 @@ int main(int argc, char* argv[]) {
         float x = 0.0;
         printf("\n");
         if (!km.pr->isFailed()) {
+            km.setLoadFromLeft();
             while (km.pr->readFloat(km.getPlayerGameObject() + km.ka->OFFSET_CSWSOBJECT_X_POS, &x) && !km.pr->isFailed()) {
                 printf("\r%f", x);
             }
