@@ -35,11 +35,22 @@ int main(int argc, char* argv[]) {
         km.outputAllDoorBasedDLZLinesInArea();
         km.outputAllTriggerBasedDLZLinesInArea();
 
-        float x = 0.0;
+        float xpc0 = 0.0;
+        float xpc1 = 0.0;
+        float xpc2 = 0.0;
+        uint count = 0;
         printf("\n");
         if (!km.pr->isFailed()) {
-            while (km.pr->readFloat(km.getPlayerGameObject() + km.ka->OFFSET_CSWSOBJECT_X_POS, &x) && !km.pr->isFailed()) {
-                printf("\r%f", x);
+            while (
+                    km.pr->readFloat(km.getPartyGameObject(0) + km.ka->OFFSET_CSWSOBJECT_X_POS, &xpc0) &&
+                    km.pr->readFloat(km.getPartyGameObject(1) + km.ka->OFFSET_CSWSOBJECT_X_POS, &xpc1) &&
+                    km.pr->readFloat(km.getPartyGameObject(2) + km.ka->OFFSET_CSWSOBJECT_X_POS, &xpc2) &&
+                    km.pr->readUint(km.getParty(), &count) &&
+                    !km.pr->isFailed()
+                ) {
+
+                printf("\rPC0 %f\tPC1 %f\tPC2 %f\tParty Count: %d\t", xpc0, xpc1, xpc2, count);
+
             }
         }
         printf("\rUpdating...");

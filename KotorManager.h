@@ -65,6 +65,17 @@ public:
         return client_player_id;
     }
 
+    ADDR getParty() {
+        if (pr->isFailed()) {
+            refreshAddresses();
+            pr->clearFailed();
+        }
+
+        ADDR party;
+        pr->readUint((client_internal + ka->OFFSET_CSWPARTY), &party);
+        return party;
+    }
+
     ADDR getGameObjectByServerID(uint server_id) {
         if(pr->isFailed()) {
             refreshAddresses();
@@ -100,6 +111,24 @@ public:
         }
 
         return getGameObjectByClientID(getClientPlayerID());
+    }
+
+    ADDR getPartyGameObject(int index) {
+        if (pr->isFailed()) {
+            refreshAddresses();
+            pr->clearFailed();
+        }
+
+        uint pc_client_id;
+        pr->readUint((getParty() + ka->OFFSET_CSWPARTY_PARTY_DATA + index * ka->SIZE_CSWPARTY_PARTY_DATA), &pc_client_id);
+        return getGameObjectByClientID(pc_client_id);
+    }
+
+    GameVector getPlayerOrientation() {
+        GameVector orientation;
+        pr->readVector((getPlayerGameObject() + ka->OFFSET_CSWSOBJECT_ORIENTATION), &orientation);
+
+        return orientation;
     }
 
     ADDR getAreaGameObject() {
